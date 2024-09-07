@@ -27,7 +27,7 @@ from graphrag.llm import CompletionLLM
 from .defaults import DEFAULT_LLM_CONFIG
 
 
-async def run_gi(
+async def run(
     docs: list[Document],
     entity_types: EntityTypes,
     reporter: VerbCallbacks,

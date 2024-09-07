@@ -20,6 +20,8 @@ from datashaper import (
 from graphrag.index.bootstrap import bootstrap
 from graphrag.index.cache import PipelineCache
 
+from .strategies.graph_intelligence import run as run_gi
+from .strategies.nltk import run as run_nltk
 from .strategies.typing import Document, EntityExtractStrategy
 
 log = logging.getLogger(__name__)
@@ -66,7 +68,7 @@ async def entity_extract(
             "column": "the_document_text_column_to_extract_entities_from", /* In general this will be your document text column */
             "id_column": "the_column_with_the_unique_id_for_each_row", /* In general this will be your document id */
             "to": "the_column_to_output_the_entities_to", /* This will be a list[dict[str, Any]] a list of entities, with a name, and additional attributes */
-            "graph_to": "the_column_to_output_the_graphml_to", /* Optional: This will be a graphml graph in string form which represents the entities and their relationships */
+            "graph_to": "the_column_to_output_the_graphml_cache_filepath_to", /* This will be a filepath to a graphml graph stored in the cache which represents the entities and their relationships. The graph is saved to a file to reduce memory pressure concerns */
             "strategy": {...} <strategy_config>, see strategies section below
             "entity_types": ["list", "of", "entity", "types", "to", "extract"] /* Optional: This will limit the entity types extracted, default: ["organization", "person", "geo", "event"] */
             "summarize_descriptions" : true | false /* Optional: This will summarize the descriptions of the entities and relationships, default: true */
@@ -80,7 +82,7 @@ async def entity_extract(
         column: the_document_text_column_to_extract_entities_from
         id_column: the_column_with_the_unique_id_for_each_row
         to: the_column_to_output_the_entities_to
-        graph_to: the_column_to_output_the_graphml_to
+        graph_to: the_column_to_output_the_graphml_filepath_to
         strategy: <strategy_config>, see strategies section below
         summarize_descriptions: true | false /* Optional: This will summarize the descriptions of the entities and relationships, default: true */
         entity_types:
@@ -126,7 +128,7 @@ async def entity_extract(
     ```
 
     ### nltk
-    This strategy uses the [nltk] library to extract entities from a document. In particular it uses a nltk to extract entities from a piece of text. The strategy config is as follows:
+    This strategy uses the [nltk] library to extract entities from a document. In particular it uses nltk to extract entities from a piece of text. The strategy config is as follows:
     ```yml
     strategy:
         type: nltk
@@ -141,6 +143,8 @@ async def entity_extract(
         strategy.get("type", ExtractEntityStrategyType.graph_intelligence)
     )
     strategy_config = {**strategy}
+    if graph_to:
+        entity_graph_cache = cache.child(graph_to)
 
     num_started = 0
 
@@ -156,7 +160,10 @@ async def entity_extract(
             strategy_config,
         )
         num_started += 1
-        return [result.entities, result.graphml_graph]
+        # write the entity graph to a file here and just return the filepath
+        entity_graph_filepath = f"{graph_to}_{id}.graphml"
+        await entity_graph_cache.set(entity_graph_filepath, result.graphml_graph)
+        return [result.entities, entity_graph_filepath]
 
     results = await derive_from_rows(
         output,
@@ -187,15 +194,9 @@ def _load_strategy(strategy_type: ExtractEntityStrategyType) -> EntityExtractStr
     """Load strategy method definition."""
     match strategy_type:
         case ExtractEntityStrategyType.graph_intelligence:
-            from .strategies.graph_intelligence import run_gi
-
             return run_gi
-
         case ExtractEntityStrategyType.nltk:
             bootstrap()
-            # dynamically import nltk strategy to avoid dependency if not used
-            from .strategies.nltk import run as run_nltk
-
             return run_nltk
         case _:
             msg = f"Unknown strategy: {strategy_type}"

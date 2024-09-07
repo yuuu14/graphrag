@@ -5,10 +5,13 @@
 
 import json
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, cast
 
 from datashaper import TableContainer, VerbInput, verb
+from pandas.core.frame import DataFrame
+from pandas.core.groupby import DataFrameGroupBy
 
+from graphrag.index.cache import PipelineCache
 from graphrag.index.storage import PipelineStorage
 
 
@@ -23,6 +26,7 @@ class FormatSpecifier:
 @verb(name="snapshot_rows")
 async def snapshot_rows(
     input: VerbInput,
+    # cache: PipelineCache,
     column: str | None,
     base_name: str,
     storage: PipelineStorage,
@@ -31,7 +35,10 @@ async def snapshot_rows(
     **_kwargs: dict,
 ) -> TableContainer:
     """Take a by-row snapshot of the tabular data."""
-    data = input.get_input()
+    if isinstance(input.get_input(), DataFrameGroupBy):
+        msg = "Cannot snapshot rows of a grouped DataFrame"
+        raise TypeError(msg)
+    data = cast(DataFrame, input.get_input())
     parsed_formats = _parse_formats(formats)
     num_rows = len(data)
 
@@ -46,6 +53,7 @@ async def snapshot_rows(
         for fmt in parsed_formats:
             row_name = get_row_name(row, row_idx)
             extension = fmt.extension
+            # graph_cache = cache.child(column)
             if fmt.format == "json":
                 await storage.set(
                     f"{row_name}.{extension}",

@@ -9,6 +9,7 @@ import networkx as nx
 import pandas as pd
 from datashaper import TableContainer, VerbCallbacks, VerbInput, progress_iterable, verb
 
+from graphrag.index.cache import PipelineCache
 from graphrag.index.utils import load_graph
 
 from .defaults import (
@@ -25,8 +26,9 @@ from .typing import (
 
 
 @verb(name="merge_graphs")
-def merge_graphs(
+async def merge_graphs(
     input: VerbInput,
+    cache: PipelineCache,
     callbacks: VerbCallbacks,
     column: str,
     to: str,
@@ -96,12 +98,21 @@ def merge_graphs(
 
     mega_graph = nx.Graph()
     num_total = len(input_df)
+    graph_cache = cache.child(column)
     for graphml in progress_iterable(input_df[column], callbacks.progress, num_total):
-        graph = load_graph(cast(str | nx.Graph, graphml))
+        graphml_string = await graph_cache.get(cast(str, graphml))
+        graph = load_graph(graphml_string)
         merge_nodes(mega_graph, graph, node_ops)
         merge_edges(mega_graph, graph, edge_ops)
 
+    # TODO save the mega graph to cache and save filename to output
+    merged_graph_filename = "merged_graph.graphml"
+    await graph_cache.set(merged_graph_filename, "\n".join(nx.generate_graphml(mega_graph)))
     output[to] = ["\n".join(nx.generate_graphml(mega_graph))]
+
+    print("MERGED GRAPH")
+    print(output.info())
+    print(output.head())
 
     return TableContainer(table=output)
 
