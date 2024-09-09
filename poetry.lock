@@ -271,6 +271,22 @@ msal-extensions = ">=0.3.0"
 typing-extensions = ">=4.0.0"
 
 [[package]]
+name = "azure-keyvault-secrets"
+version = "4.8.0"
+description = "Microsoft Azure Key Vault Secrets Client Library for Python"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "azure-keyvault-secrets-4.8.0.tar.gz", hash = "sha256:5636c0a1d8a20e3c5799cb3ccffd4ebf3f0d1acb7cae9526861833af8b0fe814"},
+    {file = "azure_keyvault_secrets-4.8.0-py3-none-any.whl", hash = "sha256:e5898c87cef95e54a8c4aa48cdbf4717ee30543a10b793c95bd57a476554a893"},
+]
+
+[package.dependencies]
+azure-core = ">=1.29.5,<2.0.0"
+isodate = ">=0.6.1"
+typing-extensions = ">=4.0.1"
+
+[[package]]
 name = "azure-search-documents"
 version = "11.5.1"
 description = "Microsoft Azure Cognitive Search Client Library for Python"
@@ -1148,6 +1164,28 @@ django = ["dj-database-url", "dj-email-url", "django-cache-url"]
 tests = ["environs[django]", "pytest"]
 
 [[package]]
+name = "essex-config"
+version = "0.0.3"
+description = "Python library for creating configuration objects that read from various sources, including files, environment variables, and Azure Key Vault."
+optional = false
+python-versions = ">=3.10,<4.0"
+files = [
+    {file = "essex_config-0.0.3-py3-none-any.whl", hash = "sha256:75b4e68a9b674079e686717b07d7a340daf1d746f3f9b945a396785dd5aefa49"},
+]
+
+[package.dependencies]
+azure-identity = ">=1.16.0,<2.0.0"
+azure-keyvault-secrets = ">=4.8.0,<5.0.0"
+pydantic = ">=2.7.3,<3.0.0"
+python-dotenv = ">=1.0.1,<2.0.0"
+pyyaml = ">=6.0.1,<7.0.0"
+rich = ">=13.7.1,<14.0.0"
+
+[package.source]
+type = "file"
+url = "../../essex-toolkit/python/essex-config/dist/essex_config-0.0.3-py3-none-any.whl"
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.2"
 description = "Backport of PEP 654 (exception groups)"
@@ -1219,7 +1257,6 @@ files = [
     {file = "fastparquet-2024.5.0-cp312-cp312-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:5626fc72204001b7e82fedb4b02174ecb4e2d4143b38b4ea8d2f9eb65f6b000e"},
     {file = "fastparquet-2024.5.0-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:c8b2e86fe6488cce0e3d41263bb0296ef9bbb875a2fca09d67d7685640017a66"},
     {file = "fastparquet-2024.5.0-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:2a951106782d51e5ab110beaad29c4aa0537f045711bb0bf146f65aeaed14174"},
-    {file = "fastparquet-2024.5.0-cp312-cp312-win_amd64.whl", hash = "sha256:cd3473d3e299bfb04c0ac7726cca5d13ee450cc2387ee7fd70587ca150647315"},
     {file = "fastparquet-2024.5.0-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:47695037fdc534ef4247f25ccf17dcbd8825be6ecb70c54ca54d588a794f4a6d"},
     {file = "fastparquet-2024.5.0-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:fc3d35ff8341cd65baecac71062e9d73393d7afda207b3421709c1d3f4baa194"},
     {file = "fastparquet-2024.5.0-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:691348cc85890663dd3c0bb02544d38d4c07a0c3d68837324dc01007301150b5"},
@@ -5262,4 +5299,4 @@ test = ["big-O", "importlib-resources", "jaraco.functools", "jaraco.itertools", 
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "21c8055fa4025f02ee92a8cfd06f58397655c400c01b4334e690677e5155d6aa"
+content-hash = "ce62d5e1c08bbab77bef3a0622467b00057a34fcaab6b0808d65aa69da35ed0b"

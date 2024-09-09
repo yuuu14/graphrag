@@ -94,6 +94,7 @@ azure-identity = "^1.17.1"
 json-repair = "^0.28.4"
 
 future = "^1.0.0"
+essex-config = {path = "D:/projects/essex-toolkit/python/essex-config/dist/essex_config-0.0.3-py3-none-any.whl"}
 [tool.poetry.group.dev.dependencies]
 coverage = "^7.6.0"
 ipykernel = "^6.29.4"
