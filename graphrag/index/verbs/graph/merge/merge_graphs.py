@@ -110,9 +110,9 @@ async def merge_graphs(
     await graph_cache.set(merged_graph_filename, "\n".join(nx.generate_graphml(mega_graph)))
     output[to] = ["\n".join(nx.generate_graphml(mega_graph))]
 
-    print("MERGED GRAPH")
-    print(output.info())
-    print(output.head())
+    # print("MERGED GRAPH")
+    # print(output.info())
+    # print(output.head())
 
     return TableContainer(table=output)
 

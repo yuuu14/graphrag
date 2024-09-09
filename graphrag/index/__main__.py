@@ -4,8 +4,32 @@
 """The Indexing Engine package root."""
 
 import argparse
+from enum import Enum
 
 from .cli import index_cli
+
+
+class ReporterType(Enum):
+    """The type of reporter to use."""
+
+    RICH = "rich"
+    PRINT = "print"
+    NONE = "none"
+
+    def __str__(self):
+        """Return the string representation of the enum value."""
+        return self.value
+
+
+class EmitType(Enum):
+    """The type of emitter to use."""
+
+    PARQUET = "parquet"
+    CSV = "csv"
+
+    def __str__(self):
+        """Return the string representation of the enum value."""
+        return self.value
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -44,13 +68,17 @@ if __name__ == "__main__":
     )
     parser.add_argument(
         "--reporter",
-        help="The progress reporter to use. Valid values are 'rich', 'print', or 'none'",
-        type=str,
+        help="The progress reporter to use. Default='rich'.",
+        default=ReporterType.RICH,
+        type=ReporterType,
+        choices=list(ReporterType),
     )
     parser.add_argument(
         "--emit",
-        help="The data formats to emit, comma-separated. Valid values are 'parquet' and 'csv'. default='parquet,csv'",
-        type=str,
+        help="The data formats to emit, comma-separated. Default='parquet'",
+        default=EmitType.PARQUET,
+        type=EmitType,
+        choices=list(EmitType),
     )
     parser.add_argument(
         "--dryrun",
@@ -89,9 +117,9 @@ if __name__ == "__main__":
         update_index_id=args.update_index,
         memprofile=args.memprofile or False,
         nocache=args.nocache or False,
-        reporter=args.reporter,
+        reporter=args.reporter.value,
         config_filepath=args.config,
-        emit=args.emit,
+        emit=args.emit.value,
         dryrun=args.dryrun or False,
         init=args.init or False,
         skip_validations=args.skip_validations or False,
