@@ -1,4 +1,4 @@
-from graphrag.config2 import GraphRagConfig, LLMParameters
+from graphrag.config2 import GraphRagConfig, LLMParameters, ParallelizationParameters
 
 
 def _assert_llm_parameters(actual: LLMParameters, expected: LLMParameters):
@@ -26,6 +26,13 @@ def _assert_llm_parameters(actual: LLMParameters, expected: LLMParameters):
         == expected.sleep_on_rate_limit_recommendation
     )
     assert actual.concurrent_requests == expected.concurrent_requests
+
+
+def _assert_parallelization_parameters(
+    actual: ParallelizationParameters, expected: ParallelizationParameters
+):
+    assert actual.stagger == expected.stagger
+    assert actual.num_threads == expected.num_threads
 
 
 def assert_configs(actual: GraphRagConfig, expected: GraphRagConfig):
@@ -93,3 +100,23 @@ def assert_configs(actual: GraphRagConfig, expected: GraphRagConfig):
 
     # Embeddings
     _assert_llm_parameters(actual.embeddings.llm, expected.embeddings.llm)
+    _assert_parallelization_parameters(
+        actual.embeddings.parallelization, expected.embeddings.parallelization
+    )
+    assert actual.embeddings.async_mode == expected.embeddings.async_mode
+    assert actual.embeddings.batch_size == expected.embeddings.batch_size
+    assert actual.embeddings.batch_max_tokens == expected.embeddings.batch_max_tokens
+    assert actual.embeddings.target == expected.embeddings.target
+    assert actual.embeddings.skip == expected.embeddings.skip
+    assert actual.embeddings.vector_store == expected.embeddings.vector_store
+    assert actual.embeddings.strategy == expected.embeddings.strategy
+
+    # chunk config
+    assert actual.chunks.size == expected.chunks.size
+    assert actual.chunks.overlap == expected.chunks.overlap
+    assert actual.chunks.group_by_columns == expected.chunks.group_by_columns
+    assert actual.chunks.strategy == expected.chunks.strategy
+    assert actual.chunks.encoding_model == expected.chunks.encoding_model
+
+    # Snapshots
+    # assert actual.snapshots.
