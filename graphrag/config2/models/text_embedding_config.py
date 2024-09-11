@@ -3,10 +3,14 @@
 
 """Parameterization settings for the default configuration."""
 
+from typing import Annotated
+
+from essex_config.field_annotations import Parser
 from pydantic import Field
 
 import graphrag.config.defaults as defs
 from graphrag.config.enums import TextEmbeddingTarget
+from graphrag.config2.field_parsers import parse_string_list
 
 from .llm_config import LLMConfig
 
@@ -25,7 +29,9 @@ class TextEmbeddingConfig(LLMConfig):
         description="The target to use. 'all' or 'required'.",
         default=defs.EMBEDDING_TARGET,
     )
-    skip: list[str] = Field(description="The specific embeddings to skip.", default=[])
+    skip: Annotated[list[str], Parser(parse_string_list)] = Field(
+        description="The specific embeddings to skip.", default=[]
+    )
     vector_store: dict | None = Field(
         description="The vector storage configuration", default=None
     )

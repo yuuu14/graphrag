@@ -4,10 +4,13 @@
 """Parameterization settings for the default configuration."""
 
 from pathlib import Path
+from typing import Annotated
 
+from essex_config.field_annotations import Parser
 from pydantic import Field
 
 import graphrag.config.defaults as defs
+from graphrag.config2.field_parsers import parse_string_list
 
 from .llm_config import LLMConfig
 
@@ -18,7 +21,7 @@ class EntityExtractionConfig(LLMConfig):
     prompt: str | None = Field(
         description="The entity extraction prompt to use.", default=None
     )
-    entity_types: list[str] = Field(
+    entity_types: Annotated[list[str], Parser(parse_string_list)] = Field(
         description="The entity extraction entity types to use.",
         default=defs.ENTITY_EXTRACTION_ENTITY_TYPES,
     )

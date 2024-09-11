@@ -36,7 +36,16 @@ def _assert_parallelization_parameters(
 
 
 def assert_configs(actual: GraphRagConfig, expected: GraphRagConfig):
+    # Global
     assert actual.root_dir == expected.root_dir
+    assert actual.api_key == expected.api_key
+    assert actual.api_base == expected.api_base
+    assert actual.api_organization == expected.api_organization
+    assert actual.api_version == expected.api_version
+    assert actual.api_proxy == expected.api_proxy
+    assert actual.async_mode == expected.async_mode
+    assert actual.encoding_model == expected.encoding_model
+    assert actual.skip_workflows == expected.skip_workflows
 
     # Reporting
     assert actual.reporting.type == expected.reporting.type
@@ -119,4 +128,127 @@ def assert_configs(actual: GraphRagConfig, expected: GraphRagConfig):
     assert actual.chunks.encoding_model == expected.chunks.encoding_model
 
     # Snapshots
-    # assert actual.snapshots.
+    assert actual.snapshots.graphml == expected.snapshots.graphml
+    assert actual.snapshots.raw_entities == expected.snapshots.raw_entities
+    assert actual.snapshots.top_level_nodes == expected.snapshots.top_level_nodes
+
+    # Entity Extraction
+    _assert_llm_parameters(actual.entity_extraction.llm, expected.entity_extraction.llm)
+    _assert_parallelization_parameters(
+        actual.entity_extraction.parallelization,
+        expected.entity_extraction.parallelization,
+    )
+    assert actual.entity_extraction.async_mode == expected.entity_extraction.async_mode
+    assert actual.entity_extraction.prompt == expected.entity_extraction.prompt
+    assert (
+        actual.entity_extraction.entity_types == expected.entity_extraction.entity_types
+    )
+    assert (
+        actual.entity_extraction.max_gleanings
+        == expected.entity_extraction.max_gleanings
+    )
+    assert actual.entity_extraction.strategy == expected.entity_extraction.strategy
+    assert (
+        actual.entity_extraction.encoding_model
+        == expected.entity_extraction.encoding_model
+    )
+
+    # Summarize Descriptions
+    _assert_llm_parameters(
+        actual.summarize_descriptions.llm, expected.summarize_descriptions.llm
+    )
+    _assert_parallelization_parameters(
+        actual.summarize_descriptions.parallelization,
+        expected.summarize_descriptions.parallelization,
+    )
+    assert (
+        actual.summarize_descriptions.async_mode
+        == expected.summarize_descriptions.async_mode
+    )
+    assert (
+        actual.summarize_descriptions.prompt == expected.summarize_descriptions.prompt
+    )
+    assert (
+        actual.summarize_descriptions.max_length
+        == expected.summarize_descriptions.max_length
+    )
+    assert (
+        actual.summarize_descriptions.strategy
+        == expected.summarize_descriptions.strategy
+    )
+
+    # Community Reports
+    _assert_llm_parameters(actual.community_reports.llm, expected.community_reports.llm)
+    _assert_parallelization_parameters(
+        actual.community_reports.parallelization,
+        expected.community_reports.parallelization,
+    )
+    assert actual.community_reports.async_mode == expected.community_reports.async_mode
+    assert actual.community_reports.prompt == expected.community_reports.prompt
+    assert actual.community_reports.max_length == expected.community_reports.max_length
+    assert (
+        actual.community_reports.max_input_length
+        == expected.community_reports.max_input_length
+    )
+    assert actual.community_reports.strategy == expected.community_reports.strategy
+
+    # Claim Extraction
+    _assert_llm_parameters(actual.claim_extraction.llm, expected.claim_extraction.llm)
+    _assert_parallelization_parameters(
+        actual.claim_extraction.parallelization,
+        expected.claim_extraction.parallelization,
+    )
+    assert actual.claim_extraction.async_mode == expected.claim_extraction.async_mode
+    assert actual.claim_extraction.enabled == expected.claim_extraction.enabled
+    assert actual.claim_extraction.prompt == expected.claim_extraction.prompt
+    assert actual.claim_extraction.description == expected.claim_extraction.description
+    assert (
+        actual.claim_extraction.max_gleanings == expected.claim_extraction.max_gleanings
+    )
+    assert actual.claim_extraction.strategy == expected.claim_extraction.strategy
+    assert (
+        actual.claim_extraction.encoding_model
+        == expected.claim_extraction.encoding_model
+    )
+
+    # Cluster Graph
+    assert (
+        actual.cluster_graph.max_cluster_size == expected.cluster_graph.max_cluster_size
+    )
+    assert actual.cluster_graph.strategy == expected.cluster_graph.strategy
+
+    # UMAP
+    assert actual.umap.enabled == expected.umap.enabled
+
+    # Local Search
+    assert actual.local_search.text_unit_prop == expected.local_search.text_unit_prop
+    assert actual.local_search.community_prop == expected.local_search.community_prop
+    assert (
+        actual.local_search.conversation_history_max_turns
+        == expected.local_search.conversation_history_max_turns
+    )
+    assert actual.local_search.top_k_entities == expected.local_search.top_k_entities
+    assert (
+        actual.local_search.top_k_relationships
+        == expected.local_search.top_k_relationships
+    )
+    assert actual.local_search.temperature == expected.local_search.temperature
+    assert actual.local_search.top_p == expected.local_search.top_p
+    assert actual.local_search.n == expected.local_search.n
+    assert actual.local_search.max_tokens == expected.local_search.max_tokens
+    assert actual.local_search.llm_max_tokens == expected.local_search.llm_max_tokens
+
+    # Global Search
+    assert actual.global_search.temperature == expected.global_search.temperature
+    assert actual.global_search.top_p == expected.global_search.top_p
+    assert actual.global_search.n == expected.global_search.n
+    assert actual.global_search.max_tokens == expected.global_search.max_tokens
+    assert (
+        actual.global_search.data_max_tokens == expected.global_search.data_max_tokens
+    )
+    assert actual.global_search.map_max_tokens == expected.global_search.map_max_tokens
+    assert (
+        actual.global_search.reduce_max_tokens
+        == expected.global_search.reduce_max_tokens
+    )
+    assert actual.global_search.concurrency == expected.global_search.concurrency

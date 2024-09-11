@@ -81,18 +81,24 @@ def load_config(
     GraphRagConfig
         The configuration object.
     """
-    sources: list[Source] = [ArgSource(**overrides)]
+    sources: list[Source] = []
     if directory_or_file_path:
-        path = Path(directory_or_file_path)
+        path = Path(directory_or_file_path).resolve()
         if path.is_dir():
+            overrides["root_dir"] = str(path)
+            sources.append(ArgSource(**overrides))
             config_path = search_for_config_in_root_dir(path)
             if config_path:
                 sources.append(FileSource(config_path, required=True))
         else:
+            overrides["root_dir"] = str(path.parent)
+            sources.append(ArgSource(**overrides))
             sources.append(FileSource(path, required=True))
         env_file = _search_for_env_file(path if path.is_dir() else path.parent)
+
         if env_file:
             sources.append(EnvSource(env_file, required=True, prefix="GRAPHRAG"))
     else:
+        sources.append(ArgSource(**overrides))
         sources.append(EnvSource(prefix="GRAPHRAG"))
     return lc(GraphRagConfig, sources=sources, parse_env_values=True)

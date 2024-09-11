@@ -5,6 +5,7 @@
 
 from pathlib import Path
 
+from datashaper import AsyncType
 from devtools import pformat
 from pydantic import Field
 
@@ -44,6 +45,21 @@ class GraphRagConfig(LLMConfig):
 
     root_dir: str = Field(
         description="The root directory for the configuration.", default=str(Path.cwd())
+    )
+
+    api_key: str | None = Field(description="The default AI API key.", default=None)
+    api_base: str | None = Field(
+        description="The default AI API base URL.", default=None
+    )
+    api_organization: str | None = Field(
+        description="The default AI API organization.", default=None
+    )
+    api_version: str | None = Field(
+        description="The default AI API version.", default=None
+    )
+    api_proxy: str | None = Field(description="The default AI API proxy.", default=None)
+    async_mode: AsyncType = Field(
+        description="The default async mode.", default=defs.ASYNC_MODE
     )
 
     reporting: ReportingConfig = Field(

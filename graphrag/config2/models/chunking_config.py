@@ -3,9 +3,13 @@
 
 """Parameterization settings for the default configuration."""
 
+from typing import Annotated
+
+from essex_config.field_annotations import Parser
 from pydantic import BaseModel, Field
 
-import graphrag.config.defaults as defs
+import graphrag.config2.defaults as defs
+from graphrag.config2.field_parsers import parse_string_list
 
 
 class ChunkingConfig(BaseModel):
@@ -15,7 +19,10 @@ class ChunkingConfig(BaseModel):
     overlap: int = Field(
         description="The chunk overlap to use.", default=defs.CHUNK_OVERLAP
     )
-    group_by_columns: list[str] = Field(
+    group_by_columns: Annotated[
+        list[str],
+        Parser(parse_string_list),
+    ] = Field(
         description="The chunk by columns to use.",
         default=defs.CHUNK_GROUP_BY_COLUMNS,
     )

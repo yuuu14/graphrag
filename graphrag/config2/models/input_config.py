@@ -3,10 +3,14 @@
 
 """Parameterization settings for the default configuration."""
 
+from typing import Annotated
+
+from essex_config.field_annotations import Parser
 from pydantic import BaseModel, Field
 
 import graphrag.config2.defaults as defs
 from graphrag.config.enums import InputFileType, InputType
+from graphrag.config2.field_parsers import parse_string_list
 
 
 class InputConfig(BaseModel):
@@ -55,6 +59,6 @@ class InputConfig(BaseModel):
     title_column: str | None = Field(
         description="The input title column to use.", default=None
     )
-    document_attribute_columns: list[str] = Field(
+    document_attribute_columns: Annotated[list[str], Parser(parse_string_list)] = Field(
         description="The document attribute columns to use.", default=[]
     )

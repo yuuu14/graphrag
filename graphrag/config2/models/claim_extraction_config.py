@@ -7,7 +7,7 @@ from pathlib import Path
 
 from pydantic import Field
 
-import graphrag.config.defaults as defs
+import graphrag.config2.defaults as defs
 
 from .llm_config import LLMConfig
 
