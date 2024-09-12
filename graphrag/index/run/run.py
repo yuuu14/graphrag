@@ -8,6 +8,7 @@ import logging
 import time
 import traceback
 from collections.abc import AsyncIterable
+from datetime import datetime
 from typing import cast
 
 import pandas as pd
@@ -221,6 +222,7 @@ async def run_pipeline(
             gc.collect()
 
             last_workflow = workflow_to_run.workflow.name
+            print(f"{last_workflow} workflow starting -- {datetime.now().strftime('%H:%M:%S.%f')}")
             result = await _process_workflow(
                 workflow_to_run.workflow,
                 context,
@@ -231,6 +233,7 @@ async def run_pipeline(
                 start_time,
                 is_resume_run,
             )
+            print(f"{last_workflow} workflow complete -- {datetime.now().strftime('%H:%M:%S.%f')}")
             if result:
                 yield result
 

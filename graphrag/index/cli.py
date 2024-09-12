@@ -10,6 +10,9 @@ import sys
 import time
 import warnings
 from pathlib import Path
+import warnings
+import pandas as pd
+from pandas.errors import SettingWithCopyWarning
 
 from graphrag.config import CacheType, enable_logging_with_config, load_config
 
@@ -111,6 +114,8 @@ def index_cli(
     skip_validations: bool,
 ):
     """Run the pipeline with the given config."""
+    warnings.simplefilter(action="ignore", category=FutureWarning)
+    warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
     progress_reporter = load_progress_reporter(reporter)
     info, error, success = _logger(progress_reporter)
     run_id = resume or update_index_id or time.strftime("%Y%m%d-%H%M%S")
