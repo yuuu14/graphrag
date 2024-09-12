@@ -286,7 +286,6 @@ def _get_default_global_search_config() -> GlobalSearchConfig:
 @pytest.fixture
 def default_config() -> GraphRagConfig:
     args: dict[str, Any] = {
-        "api_key": MOCK_API_KEY,
         "root_dir": str(Path.cwd()),
         "reporting": _get_default_reporting_config(),
         "storage": _get_default_storage_config(),

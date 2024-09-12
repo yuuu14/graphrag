@@ -38,11 +38,6 @@ def _assert_parallelization_parameters(
 def assert_configs(actual: GraphRagConfig, expected: GraphRagConfig):
     # Global
     assert actual.root_dir == expected.root_dir
-    assert actual.api_key == expected.api_key
-    assert actual.api_base == expected.api_base
-    assert actual.api_organization == expected.api_organization
-    assert actual.api_version == expected.api_version
-    assert actual.api_proxy == expected.api_proxy
     assert actual.async_mode == expected.async_mode
     assert actual.encoding_model == expected.encoding_model
     assert actual.skip_workflows == expected.skip_workflows

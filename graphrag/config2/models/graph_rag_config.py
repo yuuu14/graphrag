@@ -4,12 +4,14 @@
 """Parameterization settings for the default configuration."""
 
 from pathlib import Path
+from typing import Annotated
 
-from datashaper import AsyncType
 from devtools import pformat
+from essex_config.field_annotations import Parser
 from pydantic import Field
 
 import graphrag.config.defaults as defs
+from graphrag.config2.field_parsers import parse_string_list
 
 from .cache_config import CacheConfig
 from .chunking_config import ChunkingConfig
@@ -45,21 +47,6 @@ class GraphRagConfig(LLMConfig):
 
     root_dir: str = Field(
         description="The root directory for the configuration.", default=str(Path.cwd())
-    )
-
-    api_key: str | None = Field(description="The default AI API key.", default=None)
-    api_base: str | None = Field(
-        description="The default AI API base URL.", default=None
-    )
-    api_organization: str | None = Field(
-        description="The default AI API organization.", default=None
-    )
-    api_version: str | None = Field(
-        description="The default AI API version.", default=None
-    )
-    api_proxy: str | None = Field(description="The default AI API proxy.", default=None)
-    async_mode: AsyncType = Field(
-        description="The default async mode.", default=defs.ASYNC_MODE
     )
 
     reporting: ReportingConfig = Field(
@@ -158,7 +145,7 @@ class GraphRagConfig(LLMConfig):
     )
     """The encoding model to use."""
 
-    skip_workflows: list[str] = Field(
+    skip_workflows: Annotated[list[str], Parser(parse_string_list)] = Field(
         description="The workflows to skip, usually for testing reasons.", default=[]
     )
     """The workflows to skip, usually for testing reasons."""

@@ -13,7 +13,7 @@ from .defaults import CONFIG_FILENAME, SUPPORTED_CONFIG_EXTENSIONS
 from .models.graph_rag_config import GraphRagConfig
 
 
-def search_for_config_in_root_dir(root: str | Path) -> Path | None:
+def _search_for_config_in_root_dir(root: str | Path) -> Path | None:
     """Resolve the config path from the given root directory.
 
     Parameters
@@ -87,7 +87,7 @@ def load_config(
         if path.is_dir():
             overrides["root_dir"] = str(path)
             sources.append(ArgSource(**overrides))
-            config_path = search_for_config_in_root_dir(path)
+            config_path = _search_for_config_in_root_dir(path)
             if config_path:
                 sources.append(FileSource(config_path, required=True))
         else:
