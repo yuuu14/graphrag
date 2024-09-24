@@ -6,8 +6,8 @@ import os
 import pandas as pd
 
 from examples.custom_set_of_available_verbs.custom_verb_definitions import custom_verbs
+from graphrag.config.pipeline import PipelineWorkflowReference
 from graphrag.index import run_pipeline, run_pipeline_with_config
-from graphrag.index.config import PipelineWorkflowReference
 
 # Our fake dataset
 dataset = pd.DataFrame([{"col1": 2, "col2": 4}, {"col1": 5, "col2": 10}])

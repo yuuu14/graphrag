@@ -5,7 +5,10 @@
 
 from datashaper import DEFAULT_INPUT_NAME
 
-from graphrag.index.config import PipelineWorkflowConfig, PipelineWorkflowStep
+from graphrag.config.pipeline import (
+    PipelineWorkflowConfig,
+    PipelineWorkflowStep,
+)
 
 workflow_name = "create_base_documents"
 

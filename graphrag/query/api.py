@@ -25,9 +25,9 @@ import pandas as pd
 from pydantic import validate_call
 
 from graphrag.config import GraphRagConfig
-from graphrag.index.progress.types import PrintProgressReporter
 from graphrag.model.entity import Entity
 from graphrag.query.structured_search.base import SearchResult  # noqa: TCH001
+from graphrag.reporter import PrintProgressReporter
 from graphrag.vector_stores.lancedb import LanceDBVectorStore
 from graphrag.vector_stores.typing import VectorStoreFactory, VectorStoreType
 

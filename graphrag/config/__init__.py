@@ -3,10 +3,14 @@
 
 """The Indexing Engine default config package root."""
 
-from .config_file_loader import load_config_from_file, search_for_config_in_root_dir
+from .config_file_loader import (
+    load_config_from_file,
+    search_for_config_in_root_dir,
+)
 from .create_graphrag_config import (
     create_graphrag_config,
 )
+from .create_pipeline_config import create_pipeline_config
 from .enums import (
     CacheType,
     InputFileType,
@@ -44,6 +48,7 @@ from .input_models import (
     UmapConfigInput,
 )
 from .load_config import load_config
+from .load_pipeline_config import load_pipeline_config
 from .logging import enable_logging_with_config
 from .models import (
     CacheConfig,
@@ -67,7 +72,6 @@ from .models import (
     TextEmbeddingConfig,
     UmapConfig,
 )
-from .read_dotenv import read_dotenv
 from .resolve_path import resolve_path, resolve_paths
 
 __all__ = [
@@ -123,10 +127,11 @@ __all__ = [
     "UmapConfig",
     "UmapConfigInput",
     "create_graphrag_config",
+    "create_pipeline_config",
     "enable_logging_with_config",
     "load_config",
     "load_config_from_file",
-    "read_dotenv",
+    "load_pipeline_config",
     "resolve_path",
     "resolve_paths",
     "search_for_config_in_root_dir",

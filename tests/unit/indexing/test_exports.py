@@ -1,7 +1,7 @@
 # Copyright (c) 2024 Microsoft Corporation.
 # Licensed under the MIT License
+from graphrag.config import create_pipeline_config
 from graphrag.index import (
-    create_pipeline_config,
     run_pipeline,
     run_pipeline_with_config,
 )

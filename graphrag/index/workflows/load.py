@@ -22,7 +22,7 @@ from .default_workflows import default_workflows as _default_workflows
 from .typing import VerbDefinitions, WorkflowDefinitions, WorkflowToRun
 
 if TYPE_CHECKING:
-    from graphrag.index.config import (
+    from graphrag.config.pipeline import (
         PipelineWorkflowConfig,
         PipelineWorkflowReference,
         PipelineWorkflowStep,

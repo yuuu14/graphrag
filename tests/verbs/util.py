@@ -7,11 +7,13 @@ import pandas as pd
 from datashaper import Workflow
 from pandas.testing import assert_series_equal
 
-from graphrag.config import create_graphrag_config
-from graphrag.index import (
+from graphrag.config import (
+    create_graphrag_config,
+    create_pipeline_config,
+)
+from graphrag.config.pipeline import (
     PipelineWorkflowConfig,
     PipelineWorkflowStep,
-    create_pipeline_config,
 )
 
 

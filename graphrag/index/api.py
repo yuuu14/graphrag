@@ -8,14 +8,11 @@ WARNING: This API is under development and may undergo changes in future release
 Backwards compatibility is not guaranteed at this time.
 """
 
-from graphrag.config import CacheType, GraphRagConfig
+from graphrag.config import CacheType, GraphRagConfig, create_pipeline_config
+from graphrag.reporter import ProgressReporter
 
 from .cache.noop_pipeline_cache import NoopPipelineCache
-from .create_pipeline_config import create_pipeline_config
 from .emit.types import TableEmitterType
-from .progress import (
-    ProgressReporter,
-)
 from .run import run_pipeline_with_config
 from .typing import PipelineRunResult
 

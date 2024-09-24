@@ -3,7 +3,10 @@
 
 """A module containing build_steps method definition."""
 
-from graphrag.index.config import PipelineWorkflowConfig, PipelineWorkflowStep
+from graphrag.config.pipeline import (
+    PipelineWorkflowConfig,
+    PipelineWorkflowStep,
+)
 
 workflow_name = "create_final_communities"
 

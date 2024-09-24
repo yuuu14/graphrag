@@ -12,29 +12,24 @@ from datashaper import (
     WorkflowCallbacks,
 )
 
-from graphrag.index.cache.memory_pipeline_cache import InMemoryCache
-from graphrag.index.cache.pipeline_cache import PipelineCache
-from graphrag.index.config.cache import (
+from graphrag.config.pipeline import (
     PipelineBlobCacheConfig,
-    PipelineFileCacheConfig,
-)
-from graphrag.index.config.input import PipelineInputConfigTypes
-from graphrag.index.config.pipeline import PipelineConfig
-from graphrag.index.config.reporting import (
     PipelineBlobReportingConfig,
+    PipelineBlobStorageConfig,
+    PipelineConfig,
+    PipelineFileCacheConfig,
     PipelineFileReportingConfig,
+    PipelineFileStorageConfig,
+    PipelineInputConfigTypes,
     PipelineReportingConfigTypes,
 )
-from graphrag.index.config.storage import (
-    PipelineBlobStorageConfig,
-    PipelineFileStorageConfig,
-)
+from graphrag.index.cache.memory_pipeline_cache import InMemoryCache
+from graphrag.index.cache.pipeline_cache import PipelineCache
 from graphrag.index.context import PipelineRunContext, PipelineRunStats
 from graphrag.index.input import load_input
-from graphrag.index.progress.types import ProgressReporter
-from graphrag.index.reporting import load_pipeline_reporter
 from graphrag.index.storage.memory_pipeline_storage import MemoryPipelineStorage
 from graphrag.index.storage.typing import PipelineStorage
+from graphrag.reporter import ProgressReporter, load_pipeline_reporter
 
 log = logging.getLogger(__name__)
 

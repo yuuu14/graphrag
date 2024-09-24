@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from graphrag.index.config.storage import (
+from graphrag.config.pipeline import (
     PipelineFileStorageConfig,
     PipelineStorageConfigTypes,
 )

@@ -8,14 +8,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, cast
 
 from graphrag.config.enums import CacheType
-from graphrag.index.config.cache import (
+from graphrag.config.pipeline import (
     PipelineBlobCacheConfig,
     PipelineFileCacheConfig,
 )
 from graphrag.index.storage import BlobPipelineStorage, FilePipelineStorage
 
 if TYPE_CHECKING:
-    from graphrag.index.config import (
+    from graphrag.config.pipeline import (
         PipelineCacheConfig,
     )
 

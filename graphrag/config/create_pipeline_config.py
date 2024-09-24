@@ -7,47 +7,6 @@ import json
 import logging
 from pathlib import Path
 
-from graphrag.config.enums import (
-    CacheType,
-    InputFileType,
-    ReportingType,
-    StorageType,
-    TextEmbeddingTarget,
-)
-from graphrag.config.models import (
-    GraphRagConfig,
-    TextEmbeddingConfig,
-)
-from graphrag.index.config.cache import (
-    PipelineBlobCacheConfig,
-    PipelineCacheConfigTypes,
-    PipelineFileCacheConfig,
-    PipelineMemoryCacheConfig,
-    PipelineNoneCacheConfig,
-)
-from graphrag.index.config.input import (
-    PipelineCSVInputConfig,
-    PipelineInputConfigTypes,
-    PipelineTextInputConfig,
-)
-from graphrag.index.config.pipeline import (
-    PipelineConfig,
-)
-from graphrag.index.config.reporting import (
-    PipelineBlobReportingConfig,
-    PipelineConsoleReportingConfig,
-    PipelineFileReportingConfig,
-    PipelineReportingConfigTypes,
-)
-from graphrag.index.config.storage import (
-    PipelineBlobStorageConfig,
-    PipelineFileStorageConfig,
-    PipelineMemoryStorageConfig,
-    PipelineStorageConfigTypes,
-)
-from graphrag.index.config.workflow import (
-    PipelineWorkflowReference,
-)
 from graphrag.index.workflows.default_workflows import (
     create_base_documents,
     create_base_entity_graph,
@@ -62,6 +21,38 @@ from graphrag.index.workflows.default_workflows import (
     create_final_relationships,
     create_final_text_units,
     create_summarized_entities,
+)
+
+from .enums import (
+    CacheType,
+    InputFileType,
+    ReportingType,
+    StorageType,
+    TextEmbeddingTarget,
+)
+from .models import (
+    GraphRagConfig,
+    TextEmbeddingConfig,
+)
+from .pipeline import (
+    PipelineBlobCacheConfig,
+    PipelineBlobReportingConfig,
+    PipelineBlobStorageConfig,
+    PipelineCacheConfigTypes,
+    PipelineConfig,
+    PipelineConsoleReportingConfig,
+    PipelineCSVInputConfig,
+    PipelineFileCacheConfig,
+    PipelineFileReportingConfig,
+    PipelineFileStorageConfig,
+    PipelineInputConfigTypes,
+    PipelineMemoryCacheConfig,
+    PipelineMemoryStorageConfig,
+    PipelineNoneCacheConfig,
+    PipelineReportingConfigTypes,
+    PipelineStorageConfigTypes,
+    PipelineTextInputConfig,
+    PipelineWorkflowReference,
 )
 
 log = logging.getLogger(__name__)

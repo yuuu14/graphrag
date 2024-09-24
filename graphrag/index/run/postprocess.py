@@ -8,8 +8,10 @@ from typing import cast
 import pandas as pd
 from datashaper import DEFAULT_INPUT_NAME, WorkflowCallbacks
 
-from graphrag.index.config.input import PipelineInputConfigTypes
-from graphrag.index.config.workflow import PipelineWorkflowStep
+from graphrag.config.pipeline import (
+    PipelineInputConfigTypes,
+    PipelineWorkflowStep,
+)
 from graphrag.index.context import PipelineRunContext
 from graphrag.index.workflows.load import create_workflow
 

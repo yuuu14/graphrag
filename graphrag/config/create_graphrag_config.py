@@ -12,8 +12,7 @@ from datashaper import AsyncType
 from environs import Env
 from pydantic import TypeAdapter
 
-import graphrag.config.defaults as defs
-
+from . import defaults as defs
 from .enums import (
     CacheType,
     InputFileType,

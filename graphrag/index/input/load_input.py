@@ -11,12 +11,12 @@ from typing import cast
 import pandas as pd
 
 from graphrag.config import InputConfig, InputType
-from graphrag.index.config import PipelineInputConfig
-from graphrag.index.progress import NullProgressReporter, ProgressReporter
+from graphrag.config.pipeline import PipelineInputConfig
 from graphrag.index.storage import (
     BlobPipelineStorage,
     FilePipelineStorage,
 )
+from graphrag.reporter import NullProgressReporter, ProgressReporter
 
 from .csv import input_type as csv
 from .csv import load as load_csv

@@ -6,7 +6,7 @@
 from pathlib import Path
 
 from graphrag.config import load_config
-from graphrag.index.progress import PrintProgressReporter
+from graphrag.reporter import PrintProgressReporter
 
 from . import api
 from .generator.community_report_summarization import COMMUNITY_SUMMARIZATION_FILENAME

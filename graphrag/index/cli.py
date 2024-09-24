@@ -17,6 +17,8 @@ from graphrag.config import (
     load_config,
     resolve_paths,
 )
+from graphrag.reporter import ProgressReporter, ReporterType
+from graphrag.reporter.load_progress_reporter import load_progress_reporter
 
 from .api import build_index
 from .emit.types import TableEmitterType
@@ -25,8 +27,6 @@ from .graph.extractors.community_reports.prompts import COMMUNITY_REPORT_PROMPT
 from .graph.extractors.graph.prompts import GRAPH_EXTRACTION_PROMPT
 from .graph.extractors.summarize.prompts import SUMMARIZE_PROMPT
 from .init_content import INIT_DOTENV, INIT_YAML
-from .progress import ProgressReporter, ReporterType
-from .progress.load_progress_reporter import load_progress_reporter
 from .validate_config import validate_config_names
 
 # Ignore warnings from numba

@@ -7,12 +7,12 @@ from pathlib import Path
 from typing import Any
 from unittest import mock
 
-from graphrag.config import create_graphrag_config
-from graphrag.index import (
-    PipelineConfig,
+from graphrag.config import (
+    create_graphrag_config,
     create_pipeline_config,
     load_pipeline_config,
 )
+from graphrag.config.pipeline import PipelineConfig
 
 current_dir = os.path.dirname(__file__)
 
