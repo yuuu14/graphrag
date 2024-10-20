@@ -51,17 +51,14 @@ def load_llm(
 ) -> CompletionLLM:
     """Load the LLM for the entity extraction chain."""
     on_error = _create_error_handler(callbacks)
-
     if llm_type in loaders:
         if chat_only and not loaders[llm_type]["chat"]:
             msg = f"LLM type {llm_type} does not support chat"
             raise ValueError(msg)
         if cache is not None:
             cache = cache.child(name)
-
         loader = loaders[llm_type]
         return loader["load"](on_error, cache, llm_config or {})
-
     msg = f"Unknown LLM type {llm_type}"
     raise ValueError(msg)
 
@@ -83,7 +80,6 @@ def load_llm_embeddings(
         if cache is not None:
             cache = cache.child(name)
         return loaders[llm_type]["load"](on_error, cache, llm_config or {})
-
     msg = f"Unknown LLM type {llm_type}"
     raise ValueError(msg)
 
