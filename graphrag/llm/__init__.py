@@ -5,6 +5,7 @@
 
 from .base import BaseLLM, CachingLLM, RateLimitingLLM
 from .errors import RetriesExhaustedError
+from .factory import load_llm, load_llm_embeddings
 from .limiting import (
     CompositeLLMLimiter,
     LLMLimiter,
@@ -16,12 +17,10 @@ from .mock import MockChatLLM, MockCompletionLLM
 from .openai import (
     OpenAIChatLLM,
     OpenAIClientTypes,
-    OpenAICompletionLLM,
     OpenAIConfiguration,
     OpenAIEmbeddingsLLM,
     create_openai_chat_llm,
     create_openai_client,
-    create_openai_completion_llm,
     create_openai_embedding_llm,
 )
 from .types import (
@@ -41,9 +40,11 @@ from .types import (
     LLMInvocationResult,
     LLMOutput,
     OnCacheActionFn,
+    TextListSplitter,
+    TextSplitter,
 )
 
-__all__ = [
+__all__ = [  # noqa: RUF022
     # LLM Types
     "LLM",
     "BaseLLM",
@@ -55,6 +56,8 @@ __all__ = [
     "EmbeddingInput",
     "EmbeddingLLM",
     "EmbeddingOutput",
+    "TextListSplitter",
+    "TextSplitter",
     # Callbacks
     "ErrorHandlerFn",
     "IsResponseValidFn",
@@ -74,7 +77,6 @@ __all__ = [
     "OnCacheActionFn",
     "OpenAIChatLLM",
     "OpenAIClientTypes",
-    "OpenAICompletionLLM",
     # OpenAI
     "OpenAIConfiguration",
     "OpenAIEmbeddingsLLM",
@@ -84,8 +86,10 @@ __all__ = [
     "TpmRpmLLMLimiter",
     "create_openai_chat_llm",
     "create_openai_client",
-    "create_openai_completion_llm",
     "create_openai_embedding_llm",
     # Limiters
     "create_tpm_rpm_limiters",
+    # LLMs
+    "load_llm",
+    "load_llm_embeddings",
 ]

@@ -10,18 +10,17 @@ import logging
 from typing import TYPE_CHECKING, Any
 
 from graphrag.config.enums import LLMType
-from graphrag.llm import (
-    CompletionLLM,
-    EmbeddingLLM,
-    LLMCache,
+
+from .limiting import (
     LLMLimiter,
-    MockCompletionLLM,
+    create_tpm_rpm_limiters,
+)
+from .mock import MockCompletionLLM
+from .openai import (
     OpenAIConfiguration,
     create_openai_chat_llm,
     create_openai_client,
-    create_openai_completion_llm,
     create_openai_embedding_llm,
-    create_tpm_rpm_limiters,
 )
 
 if TYPE_CHECKING:
@@ -29,6 +28,12 @@ if TYPE_CHECKING:
 
     from graphrag.index.cache import PipelineCache
     from graphrag.index.typing import ErrorHandlerFn
+
+    from .types import (
+        CompletionLLM,
+        EmbeddingLLM,
+        LLMCache,
+    )
 
 log = logging.getLogger(__name__)
 
@@ -94,30 +99,6 @@ def _create_error_handler(callbacks: VerbCallbacks) -> ErrorHandlerFn:
     return on_error
 
 
-def _load_openai_completion_llm(
-    on_error: ErrorHandlerFn,
-    cache: LLMCache,
-    config: dict[str, Any],
-    azure=False,
-):
-    return _create_openai_completion_llm(
-        OpenAIConfiguration({
-            **_get_base_config(config),
-            "model": config.get("model", "gpt-4-turbo-preview"),
-            "deployment_name": config.get("deployment_name"),
-            "temperature": config.get("temperature", 0.0),
-            "frequency_penalty": config.get("frequency_penalty", 0),
-            "presence_penalty": config.get("presence_penalty", 0),
-            "top_p": config.get("top_p", 1),
-            "max_tokens": config.get("max_tokens", 4000),
-            "n": config.get("n"),
-        }),
-        on_error,
-        cache,
-        azure,
-    )
-
-
 def _load_openai_chat_llm(
     on_error: ErrorHandlerFn,
     cache: LLMCache,
@@ -164,12 +145,6 @@ def _load_openai_embeddings_llm(
     )
 
 
-def _load_azure_openai_completion_llm(
-    on_error: ErrorHandlerFn, cache: LLMCache, config: dict[str, Any]
-):
-    return _load_openai_completion_llm(on_error, cache, config, True)
-
-
 def _load_azure_openai_chat_llm(
     on_error: ErrorHandlerFn, cache: LLMCache, config: dict[str, Any]
 ):
@@ -210,14 +185,6 @@ def _load_static_response(
 
 
 loaders = {
-    LLMType.OpenAI: {
-        "load": _load_openai_completion_llm,
-        "chat": False,
-    },
-    LLMType.AzureOpenAI: {
-        "load": _load_azure_openai_completion_llm,
-        "chat": False,
-    },
     LLMType.OpenAIChat: {
         "load": _load_openai_chat_llm,
         "chat": True,
@@ -252,21 +219,6 @@ def _create_openai_chat_llm(
     limiter = _create_limiter(configuration)
     semaphore = _create_semaphore(configuration)
     return create_openai_chat_llm(
-        client, configuration, cache, limiter, semaphore, on_error=on_error
-    )
-
-
-def _create_openai_completion_llm(
-    configuration: OpenAIConfiguration,
-    on_error: ErrorHandlerFn,
-    cache: LLMCache,
-    azure=False,
-) -> CompletionLLM:
-    """Create an openAI completion llm."""
-    client = create_openai_client(configuration=configuration, azure=azure)
-    limiter = _create_limiter(configuration)
-    semaphore = _create_semaphore(configuration)
-    return create_openai_completion_llm(
         client, configuration, cache, limiter, semaphore, on_error=on_error
     )
 

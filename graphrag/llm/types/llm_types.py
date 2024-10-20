@@ -3,6 +3,7 @@
 
 """LLM Types."""
 
+from collections.abc import Callable
 from typing import TypeAlias
 
 from .llm import LLM
@@ -14,3 +15,5 @@ CompletionOutput: TypeAlias = str
 
 EmbeddingLLM: TypeAlias = LLM[EmbeddingInput, EmbeddingOutput]
 CompletionLLM: TypeAlias = LLM[CompletionInput, CompletionOutput]
+TextSplitter: TypeAlias = Callable[[str], list[str]]
+TextListSplitter: TypeAlias = Callable[[list[str]], list[str]]

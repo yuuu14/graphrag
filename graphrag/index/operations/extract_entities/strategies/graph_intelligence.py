@@ -8,13 +8,12 @@ from datashaper import VerbCallbacks
 import graphrag.config.defaults as defs
 from graphrag.index.cache import PipelineCache
 from graphrag.index.graph.extractors import GraphExtractor
-from graphrag.index.llm import load_llm
 from graphrag.index.text_splitting import (
     NoopTextSplitter,
     TextSplitter,
     TokenTextSplitter,
 )
-from graphrag.llm import CompletionLLM
+from graphrag.llm import CompletionLLM, load_llm
 
 from .typing import (
     Document,

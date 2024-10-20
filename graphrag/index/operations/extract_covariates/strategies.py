@@ -11,8 +11,7 @@ from datashaper import VerbCallbacks
 import graphrag.config.defaults as defs
 from graphrag.index.cache import PipelineCache
 from graphrag.index.graph.extractors.claims import ClaimExtractor
-from graphrag.index.llm import load_llm
-from graphrag.llm import CompletionLLM
+from graphrag.llm import CompletionLLM, load_llm
 
 from .typing import (
     Covariate,

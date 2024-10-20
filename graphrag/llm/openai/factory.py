@@ -19,7 +19,6 @@ from graphrag.llm.types import (
 
 from .json_parsing_llm import JsonParsingLLM
 from .openai_chat_llm import OpenAIChatLLM
-from .openai_completion_llm import OpenAICompletionLLM
 from .openai_configuration import OpenAIConfiguration
 from .openai_embeddings_llm import OpenAIEmbeddingsLLM
 from .openai_history_tracking_llm import OpenAIHistoryTrackingLLM
@@ -56,28 +55,6 @@ def create_openai_chat_llm(
     result = OpenAIHistoryTrackingLLM(result)
     result = OpenAITokenReplacingLLM(result)
     return JsonParsingLLM(result)
-
-
-def create_openai_completion_llm(
-    client: OpenAIClientTypes,
-    config: OpenAIConfiguration,
-    cache: LLMCache | None = None,
-    limiter: LLMLimiter | None = None,
-    semaphore: asyncio.Semaphore | None = None,
-    on_invoke: LLMInvocationFn | None = None,
-    on_error: ErrorHandlerFn | None = None,
-    on_cache_hit: OnCacheActionFn | None = None,
-    on_cache_miss: OnCacheActionFn | None = None,
-) -> CompletionLLM:
-    """Create an OpenAI completion LLM."""
-    operation = "completion"
-    result = OpenAICompletionLLM(client, config)
-    result.on_error(on_error)
-    if limiter is not None or semaphore is not None:
-        result = _rate_limited(result, config, operation, limiter, semaphore, on_invoke)
-    if cache is not None:
-        result = _cached(result, config, operation, cache, on_cache_hit, on_cache_miss)
-    return OpenAITokenReplacingLLM(result)
 
 
 def create_openai_embedding_llm(
