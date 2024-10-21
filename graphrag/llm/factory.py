@@ -68,12 +68,18 @@ class LLMFactory:
         match llm_type:
             case LLMType.AzureOpenAIChat:
                 return _load_openai_chat_llm(
-                    on_error, cache, llm_config or {}, is_azure=True
-                )  # type: ignore
+                    on_error,
+                    cache,  # type: ignore
+                    llm_config or {},
+                    is_azure=True,
+                )
             case LLMType.OpenAIChat:
                 return _load_openai_chat_llm(
-                    on_error, cache, llm_config or {}, is_azure=False
-                )  # type: ignore
+                    on_error,
+                    cache,  # type: ignore
+                    llm_config or {},
+                    is_azure=False,
+                )
             case LLMType.StaticResponse:
                 return _load_static_response(on_error, cache, llm_config or {})  # type: ignore
             case _:
@@ -110,8 +116,11 @@ class EmbeddingLLMFactory:
         match llm_type:
             case LLMType.AzureOpenAIEmbedding:
                 return _load_openai_embeddings_llm(
-                    on_error, cache, llm_config or {}, is_azure=True
-                )  # type: ignore
+                    on_error,
+                    cache,  # type: ignore
+                    llm_config or {},
+                    is_azure=True,
+                )
             case LLMType.OpenAIEmbedding:
                 return _load_openai_embeddings_llm(on_error, cache, llm_config or {})  # type: ignore
             case LLMType.StaticResponse:
