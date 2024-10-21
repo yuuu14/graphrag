@@ -5,7 +5,7 @@
 
 from .base import BaseLLM, CachingLLM, RateLimitingLLM
 from .errors import RetriesExhaustedError
-from .factory import load_llm, load_llm_embeddings
+from .factory import EmbeddingLLMFactory, LLMFactory
 from .limiting import (
     CompositeLLMLimiter,
     LLMLimiter,
@@ -89,7 +89,7 @@ __all__ = [  # noqa: RUF022
     "create_openai_embedding_llm",
     # Limiters
     "create_tpm_rpm_limiters",
-    # LLMs
-    "load_llm",
-    "load_llm_embeddings",
+    # LLM Factory
+    "LLMFactory",
+    "EmbeddingLLMFactory",
 ]

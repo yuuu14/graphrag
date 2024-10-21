@@ -7,7 +7,7 @@ from datashaper import VerbCallbacks
 
 from graphrag.index.cache import PipelineCache
 from graphrag.index.graph.extractors.summarize import SummarizeExtractor
-from graphrag.llm import CompletionLLM, load_llm
+from graphrag.llm import CompletionLLM, LLMFactory
 
 from .typing import (
     StrategyConfig,
@@ -25,7 +25,9 @@ async def run_graph_intelligence(
     """Run the graph intelligence entity extraction strategy."""
     llm_config = args.get("llm", {})
     llm_type = llm_config.get("type")
-    llm = load_llm("summarize_descriptions", llm_type, callbacks, cache, llm_config)
+    llm = LLMFactory.create_llm(
+        "summarize_descriptions", llm_type, callbacks, cache, llm_config
+    )
     return await run_summarize_descriptions(
         llm, described_items, descriptions, callbacks, args
     )

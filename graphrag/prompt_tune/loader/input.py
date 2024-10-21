@@ -11,7 +11,7 @@ import graphrag.config.defaults as defs
 from graphrag.config.models.graph_rag_config import GraphRagConfig
 from graphrag.index.input import load_input
 from graphrag.index.operations.chunk_text import chunk_text
-from graphrag.llm import load_llm_embeddings
+from graphrag.llm import EmbeddingLLMFactory
 from graphrag.llm.types.llm_types import EmbeddingLLM
 from graphrag.logging import ProgressReporter
 from graphrag.prompt_tune.types import DocSelectionType
@@ -89,7 +89,7 @@ async def load_docs_in_chunks(
         if k is None or k <= 0:
             msg = "k must be an integer > 0"
             raise ValueError(msg)
-        embedding_llm = load_llm_embeddings(
+        embedding_llm = EmbeddingLLMFactory.create_llm(
             name="prompt_tuning_embeddings",
             llm_type=config.embeddings.resolved_strategy()["llm"]["type"],
             callbacks=NoopVerbCallbacks(),

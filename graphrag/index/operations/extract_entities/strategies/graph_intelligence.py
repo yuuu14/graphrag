@@ -13,7 +13,7 @@ from graphrag.index.text_splitting import (
     TextSplitter,
     TokenTextSplitter,
 )
-from graphrag.llm import CompletionLLM, load_llm
+from graphrag.llm import CompletionLLM, LLMFactory
 
 from .typing import (
     Document,
@@ -33,7 +33,9 @@ async def run_graph_intelligence(
     """Run the graph intelligence entity extraction strategy."""
     llm_config = args.get("llm", {})
     llm_type = llm_config.get("type")
-    llm = load_llm("entity_extraction", llm_type, callbacks, cache, llm_config)
+    llm = LLMFactory.create_llm(
+        "entity_extraction", llm_type, callbacks, cache, llm_config
+    )
     return await run_extract_entities(llm, docs, entity_types, callbacks, args)
 
 

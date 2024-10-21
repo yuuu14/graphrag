@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, ClassVar
 
 from graphrag.config.enums import LLMType
 
@@ -41,47 +41,86 @@ _semaphores: dict[str, asyncio.Semaphore] = {}
 _rate_limiters: dict[str, LLMLimiter] = {}
 
 
-def load_llm(
-    name: str,
-    llm_type: LLMType,
-    callbacks: VerbCallbacks,
-    cache: PipelineCache | None,
-    llm_config: dict[str, Any] | None = None,
-    chat_only=False,
-) -> CompletionLLM:
-    """Load the LLM for the entity extraction chain."""
-    on_error = _create_error_handler(callbacks)
-    if llm_type in loaders:
-        if chat_only and not loaders[llm_type]["chat"]:
-            msg = f"LLM type {llm_type} does not support chat"
-            raise ValueError(msg)
+class LLMFactory:
+    """A factory class for creating llm's."""
+
+    llm_types: ClassVar[dict[str, type]] = {}
+
+    @classmethod
+    def register(cls, llm_type: str, llm: type):
+        """Register a LLM type."""
+        cls.llm_types[llm_type] = llm
+
+    @classmethod
+    def create_llm(
+        cls,
+        name: str,
+        llm_type: LLMType,
+        callbacks: VerbCallbacks,
+        cache: PipelineCache | None,
+        llm_config: dict[str, Any] | None = None,
+        **kwargs,
+    ) -> CompletionLLM:
+        """Get the vector store type from a string."""
+        on_error = _create_error_handler(callbacks)
         if cache is not None:
             cache = cache.child(name)
-        loader = loaders[llm_type]
-        return loader["load"](on_error, cache, llm_config or {})
-    msg = f"Unknown LLM type {llm_type}"
-    raise ValueError(msg)
+        match llm_type:
+            case LLMType.AzureOpenAIChat:
+                return _load_openai_chat_llm(
+                    on_error, cache, llm_config or {}, is_azure=True
+                )  # type: ignore
+            case LLMType.OpenAIChat:
+                return _load_openai_chat_llm(
+                    on_error, cache, llm_config or {}, is_azure=False
+                )  # type: ignore
+            case LLMType.StaticResponse:
+                return _load_static_response(on_error, cache, llm_config or {})  # type: ignore
+            case _:
+                if llm_type in cls.llm_types:
+                    return cls.llm_types[llm_type](**kwargs)
+                msg = f"Unknown llm type: {llm_type}"
+                raise ValueError(msg)
 
 
-def load_llm_embeddings(
-    name: str,
-    llm_type: LLMType,
-    callbacks: VerbCallbacks,
-    cache: PipelineCache | None,
-    llm_config: dict[str, Any] | None = None,
-    chat_only=False,
-) -> EmbeddingLLM:
-    """Load the LLM for the entity extraction chain."""
-    on_error = _create_error_handler(callbacks)
-    if llm_type in loaders:
-        if chat_only and not loaders[llm_type]["chat"]:
-            msg = f"LLM type {llm_type} does not support chat"
-            raise ValueError(msg)
+class EmbeddingLLMFactory:
+    """A factory class for creating embedding llm's."""
+
+    llm_types: ClassVar[dict[str, type]] = {}
+
+    @classmethod
+    def register(cls, llm_type: str, llm: type):
+        """Register a LLM type."""
+        cls.llm_types[llm_type] = llm
+
+    @classmethod
+    def create_llm(
+        cls,
+        name: str,
+        llm_type: LLMType,
+        callbacks: VerbCallbacks,
+        cache: PipelineCache | None,
+        llm_config: dict[str, Any] | None = None,
+        **kwargs,
+    ) -> EmbeddingLLM:
+        """Get the embedding llm type from a string."""
+        on_error = _create_error_handler(callbacks)
         if cache is not None:
             cache = cache.child(name)
-        return loaders[llm_type]["load"](on_error, cache, llm_config or {})
-    msg = f"Unknown LLM type {llm_type}"
-    raise ValueError(msg)
+        match llm_type:
+            case LLMType.AzureOpenAIEmbedding:
+                return _load_openai_embeddings_llm(
+                    on_error, cache, llm_config or {}, is_azure=True
+                )  # type: ignore
+            case LLMType.OpenAIEmbedding:
+                return _load_openai_embeddings_llm(on_error, cache, llm_config or {})  # type: ignore
+            case LLMType.StaticResponse:
+                return _load_static_response(on_error, cache, llm_config or {})  # type: ignore
+            case _:
+                if llm_type in cls.llm_types:
+                    return cls.llm_types[llm_type](**kwargs)
+                msg = f"Unknown llm type: {llm_type}"
+                raise ValueError(msg)
 
 
 def _create_error_handler(callbacks: VerbCallbacks) -> ErrorHandlerFn:
@@ -90,7 +129,7 @@ def _create_error_handler(callbacks: VerbCallbacks) -> ErrorHandlerFn:
         stack: str | None = None,
         details: dict | None = None,
     ) -> None:
-        callbacks.error("Error Invoking LLM", error, stack, details)
+        callbacks.error("Error calling LLM", error, stack, details)
 
     return on_error
 
@@ -99,7 +138,7 @@ def _load_openai_chat_llm(
     on_error: ErrorHandlerFn,
     cache: LLMCache,
     config: dict[str, Any],
-    azure=False,
+    is_azure=False,
 ):
     return _create_openai_chat_llm(
         OpenAIConfiguration({
@@ -116,7 +155,22 @@ def _load_openai_chat_llm(
         }),
         on_error,
         cache,
-        azure,
+        is_azure,
+    )
+
+
+def _create_openai_chat_llm(
+    configuration: OpenAIConfiguration,
+    on_error: ErrorHandlerFn,
+    cache: LLMCache,
+    is_azure=False,
+) -> CompletionLLM:
+    """Create an openAI chat llm."""
+    client = create_openai_client(configuration=configuration, is_azure=is_azure)
+    limiter = _create_limiter(configuration)
+    semaphore = _create_semaphore(configuration)
+    return create_openai_chat_llm(
+        client, configuration, cache, limiter, semaphore, on_error=on_error
     )
 
 
@@ -124,7 +178,7 @@ def _load_openai_embeddings_llm(
     on_error: ErrorHandlerFn,
     cache: LLMCache,
     config: dict[str, Any],
-    azure=False,
+    is_azure=False,
 ):
     # TODO: Inject Cache
     return _create_openai_embeddings_llm(
@@ -137,20 +191,23 @@ def _load_openai_embeddings_llm(
         }),
         on_error,
         cache,
-        azure,
+        is_azure,
     )
 
 
-def _load_azure_openai_chat_llm(
-    on_error: ErrorHandlerFn, cache: LLMCache, config: dict[str, Any]
-):
-    return _load_openai_chat_llm(on_error, cache, config, True)
-
-
-def _load_azure_openai_embeddings_llm(
-    on_error: ErrorHandlerFn, cache: LLMCache, config: dict[str, Any]
-):
-    return _load_openai_embeddings_llm(on_error, cache, config, True)
+def _create_openai_embeddings_llm(
+    configuration: OpenAIConfiguration,
+    on_error: ErrorHandlerFn,
+    cache: LLMCache,
+    is_azure=False,
+) -> EmbeddingLLM:
+    """Create an openAI embeddings llm."""
+    client = create_openai_client(configuration=configuration, is_azure=is_azure)
+    limiter = _create_limiter(configuration)
+    semaphore = _create_semaphore(configuration)
+    return create_openai_embedding_llm(
+        client, configuration, cache, limiter, semaphore, on_error=on_error
+    )
 
 
 def _get_base_config(config: dict[str, Any]) -> dict[str, Any]:
@@ -178,60 +235,6 @@ def _load_static_response(
     _on_error: ErrorHandlerFn, _cache: PipelineCache, config: dict[str, Any]
 ) -> CompletionLLM:
     return MockCompletionLLM(config.get("responses", []))
-
-
-loaders = {
-    LLMType.OpenAIChat: {
-        "load": _load_openai_chat_llm,
-        "chat": True,
-    },
-    LLMType.AzureOpenAIChat: {
-        "load": _load_azure_openai_chat_llm,
-        "chat": True,
-    },
-    LLMType.OpenAIEmbedding: {
-        "load": _load_openai_embeddings_llm,
-        "chat": False,
-    },
-    LLMType.AzureOpenAIEmbedding: {
-        "load": _load_azure_openai_embeddings_llm,
-        "chat": False,
-    },
-    LLMType.StaticResponse: {
-        "load": _load_static_response,
-        "chat": False,
-    },
-}
-
-
-def _create_openai_chat_llm(
-    configuration: OpenAIConfiguration,
-    on_error: ErrorHandlerFn,
-    cache: LLMCache,
-    azure=False,
-) -> CompletionLLM:
-    """Create an openAI chat llm."""
-    client = create_openai_client(configuration=configuration, azure=azure)
-    limiter = _create_limiter(configuration)
-    semaphore = _create_semaphore(configuration)
-    return create_openai_chat_llm(
-        client, configuration, cache, limiter, semaphore, on_error=on_error
-    )
-
-
-def _create_openai_embeddings_llm(
-    configuration: OpenAIConfiguration,
-    on_error: ErrorHandlerFn,
-    cache: LLMCache,
-    azure=False,
-) -> EmbeddingLLM:
-    """Create an openAI embeddings llm."""
-    client = create_openai_client(configuration=configuration, azure=azure)
-    limiter = _create_limiter(configuration)
-    semaphore = _create_semaphore(configuration)
-    return create_openai_embedding_llm(
-        client, configuration, cache, limiter, semaphore, on_error=on_error
-    )
 
 
 def _create_limiter(configuration: OpenAIConfiguration) -> LLMLimiter:

@@ -19,10 +19,10 @@ API_BASE_REQUIRED_FOR_AZURE = "api_base is required for Azure OpenAI client"
 
 @cache
 def create_openai_client(
-    configuration: OpenAIConfiguration, azure: bool
+    configuration: OpenAIConfiguration, is_azure: bool
 ) -> OpenAIClientTypes:
     """Create a new OpenAI client instance."""
-    if azure:
+    if is_azure:
         api_base = configuration.api_base
         if api_base is None:
             raise ValueError(API_BASE_REQUIRED_FOR_AZURE)

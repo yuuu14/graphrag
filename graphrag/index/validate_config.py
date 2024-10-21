@@ -9,7 +9,7 @@ import sys
 from datashaper import NoopVerbCallbacks
 
 from graphrag.config.models import GraphRagConfig
-from graphrag.llm import load_llm, load_llm_embeddings
+from graphrag.llm import EmbeddingLLMFactory, LLMFactory
 from graphrag.logging import ProgressReporter
 
 
@@ -18,7 +18,7 @@ def validate_config_names(
 ) -> None:
     """Validate config file for LLM deployment name typos."""
     # Validate Chat LLM configs
-    llm = load_llm(
+    llm = LLMFactory.create_llm(
         "test-llm",
         parameters.llm.type,
         NoopVerbCallbacks(),
@@ -33,7 +33,7 @@ def validate_config_names(
         sys.exit(1)
 
     # Validate Embeddings LLM configs
-    embed_llm = load_llm_embeddings(
+    embed_llm = EmbeddingLLMFactory.get_llm(
         "test-embed-llm",
         parameters.embeddings.llm.type,
         NoopVerbCallbacks(),

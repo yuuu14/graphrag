@@ -14,7 +14,7 @@ import graphrag.config.defaults as defs
 from graphrag.index.cache import PipelineCache
 from graphrag.index.text_splitting import TokenTextSplitter
 from graphrag.index.utils import is_null
-from graphrag.llm import EmbeddingLLM, OpenAIConfiguration, load_llm_embeddings
+from graphrag.llm import EmbeddingLLM, EmbeddingLLMFactory, OpenAIConfiguration
 
 from .typing import TextEmbeddingResult
 
@@ -79,7 +79,7 @@ def _get_llm(
     cache: PipelineCache,
 ) -> EmbeddingLLM:
     llm_type = config.lookup("type", "Unknown")
-    return load_llm_embeddings(
+    return EmbeddingLLMFactory.create_llm(
         "text_embedding",
         llm_type,
         callbacks,

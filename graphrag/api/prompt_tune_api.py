@@ -15,7 +15,7 @@ from datashaper import NoopVerbCallbacks
 from pydantic import PositiveInt, validate_call
 
 from graphrag.config.models.graph_rag_config import GraphRagConfig
-from graphrag.llm import load_llm
+from graphrag.llm import LLMFactory
 from graphrag.logging import PrintProgressReporter
 from graphrag.prompt_tune.generator import (
     MAX_TOKEN_COUNT,
@@ -88,7 +88,7 @@ async def generate_indexing_prompts(
     )
 
     # Create LLM from config
-    llm = load_llm(
+    llm = LLMFactory.create_llm(
         "prompt_tuning",
         config.llm.type,
         NoopVerbCallbacks(),

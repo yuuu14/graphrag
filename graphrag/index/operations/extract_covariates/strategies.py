@@ -11,7 +11,7 @@ from datashaper import VerbCallbacks
 import graphrag.config.defaults as defs
 from graphrag.index.cache import PipelineCache
 from graphrag.index.graph.extractors.claims import ClaimExtractor
-from graphrag.llm import CompletionLLM, load_llm
+from graphrag.llm import CompletionLLM, LLMFactory
 
 from .typing import (
     Covariate,
@@ -30,7 +30,9 @@ async def run_graph_intelligence(
     """Run the Claim extraction chain."""
     llm_config = strategy_config.get("llm", {})
     llm_type = llm_config.get("type")
-    llm = load_llm("claim_extraction", llm_type, callbacks, cache, llm_config)
+    llm = LLMFactory.create_llm(
+        "claim_extraction", llm_type, callbacks, cache, llm_config
+    )
     return await _execute(
         llm, input, entity_types, resolved_entities_map, callbacks, strategy_config
     )
