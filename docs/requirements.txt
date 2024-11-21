@@ -2,3 +2,4 @@ tiktoken
 devtools
 datashaper
 pandas
+azure
