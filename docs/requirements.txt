@@ -2,4 +2,7 @@ tiktoken
 devtools
 datashaper
 pandas
-azure
+azure==4.0.0
+azure-identity
+azure-search-documents
+lancedb
