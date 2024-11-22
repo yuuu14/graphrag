@@ -11,3 +11,5 @@ tenacity
 aiolimiter
 json-repair
 networkx
+nltk
+langchain-community==0.3.7
