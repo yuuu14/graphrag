@@ -6,3 +6,8 @@ azure==4.0.0
 azure-identity
 azure-search-documents
 lancedb
+openai
+tenacity
+aiolimiter
+json-repair
+networkx
