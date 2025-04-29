@@ -14,7 +14,7 @@ def create_graph(
     node_id: str = "title",
 ) -> nx.Graph:
     """Create a networkx graph from nodes and edges dataframes."""
-    graph = nx.from_pandas_edgelist(edges, edge_attr=edge_attr)
+    graph: nx.Graph | nx.DiGraph = nx.from_pandas_edgelist(edges, edge_attr=edge_attr)
 
     if nodes is not None:
         nodes.set_index(node_id, inplace=True)

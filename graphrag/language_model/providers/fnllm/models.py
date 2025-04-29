@@ -182,6 +182,13 @@ class OpenAIEmbeddingFNLLM:
         -------
             The embeddings of the text.
         """
+        # if kwargs.get("isNorm") is None:
+        #     kwargs["isNorm"] = False
+        #     kwargs.__setitem__("isNorm", False)
+        # if kwargs.get("model") is None:
+        #     kwargs["model"] = "m3e"
+        print("HERE_AEMBED_BATCH")
+
         response = await self.model(text_list, **kwargs)
         if response.output.embeddings is None:
             msg = "No embeddings found in response"
@@ -201,6 +208,13 @@ class OpenAIEmbeddingFNLLM:
         -------
             The embeddings of the text.
         """
+        # if kwargs.get("isNorm") is None:
+        #     kwargs["isNorm"] = False
+        #     kwargs.__setitem__("isNorm", False)
+        # if kwargs.get("model") is None:
+        #     kwargs["model"] = "m3e"
+        print("HERE_AEMBED")
+        
         response = await self.model([text], **kwargs)
         if response.output.embeddings is None:
             msg = "No embeddings found in response"
@@ -220,6 +234,13 @@ class OpenAIEmbeddingFNLLM:
         -------
             The embeddings of the text.
         """
+        # if kwargs.get("isNorm") is None:
+        #     kwargs["isNorm"] = False
+        #     kwargs.__setitem__("isNorm", False)
+        # if kwargs.get("model") is None:
+        #     kwargs["model"] = "m3e"
+
+        print("HERE_EMBED_BATCH")
         return run_coroutine_sync(self.aembed_batch(text_list, **kwargs))
 
     def embed(self, text: str, **kwargs) -> list[float]:
@@ -234,6 +255,13 @@ class OpenAIEmbeddingFNLLM:
         -------
             The embeddings of the text.
         """
+        # if kwargs.get("isNorm") is None:
+        #     kwargs["isNorm"] = False
+        #     kwargs.__setitem__("isNorm", False)
+        # if kwargs.get("model") is None:
+        #     kwargs["model"] = "m3e"
+
+        print("HERE_EMBED")
         return run_coroutine_sync(self.aembed(text, **kwargs))
 
 

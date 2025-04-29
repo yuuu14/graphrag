@@ -184,8 +184,10 @@ class ExtractGraphDefaults:
 class TextAnalyzerDefaults:
     """Default values for text analyzer."""
 
-    extractor_type = NounPhraseExtractorType.RegexEnglish
-    model_name: str = "en_core_web_md"
+    # extractor_type = NounPhraseExtractorType.RegexEnglish
+    extractor_type = NounPhraseExtractorType.Syntactic
+    # model_name: str = "en_core_web_md"
+    model_name: str = "zh_core_web_md"
     max_word_length: int = 15
     word_delimiter: str = " "
     include_named_entities: bool = True

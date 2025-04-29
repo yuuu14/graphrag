@@ -111,6 +111,10 @@ class ModelType(str, Enum):
     OpenAIChat = "openai_chat"
     AzureOpenAIChat = "azure_openai_chat"
 
+    SupconEmbedding = "supcon_embedding"
+    QwenChat = "qwen_chat"
+
+
     # Debug
     MockChat = "mock_chat"
     MockEmbedding = "mock_embedding"
