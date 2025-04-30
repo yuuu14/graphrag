@@ -1,5 +1,4 @@
 
-
 from dataclasses import asdict
 from pathlib import Path
 
@@ -7,7 +6,7 @@ from devtools import pformat
 from pydantic import BaseModel, Field, model_validator
 
 
-class GraphRAGConfig(BaseModel):
+class GraphRAGDefaultConfig(BaseModel):
     """Contains default configurations for GraphRAGLite."""
 
     def __repr__(self) -> str:
