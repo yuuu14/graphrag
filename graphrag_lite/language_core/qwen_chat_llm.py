@@ -1,6 +1,6 @@
-"""定义的QwenChatLLM"""
+# Copyright (c) 2025 @ SUPCON.
+"""定义的QwenChatLLM."""
 # https://python.langchain.com/docs/how_to/custom_llm/
-
 from collections.abc import AsyncIterator, Iterator
 from typing import Any
 
@@ -10,16 +10,18 @@ from langchain_core.callbacks.manager import (
 )
 from langchain_core.outputs import GenerationChunk
 
-# response type
-from openai.types.chat.chat_completion import ChatCompletion
-from openai.types.chat.chat_completion_chunk import ChatCompletionChunk
-
-from graphrag_lite.config import LLMConfig
+from graphrag_lite.config.llm_config import LLMConfig
 from graphrag_lite.language_core.base import AsyncChatClient, ChatClient
-from graphrag_lite.language_core.types import ChatLLM
+from graphrag_lite.language_core.types import (
+    ChatCompletion,
+    ChatCompletionChunk,
+    ChatLLM,
+)
 
 
 class QwenChatLLM(ChatLLM):
+    """本地部署的Qwen2.5-72B."""
+    
     config: LLMConfig
 
     async def _acall(
@@ -47,13 +49,14 @@ class QwenChatLLM(ChatLLM):
 
         Returns:
             The model output as a string. SHOULD NOT include the prompt.
-        """
+        """  # noqa: D406, D407
         history = kwargs.get("history_messages", [])
         messages = [*history, {"role": "user", "content": prompt}]
         stream = False
         args = {
             "data": {
                 "messages": messages,
+                "model": self.config.model_name,
                 "stream": stream,
                 **self.config.model_parameters,
             },
@@ -76,16 +79,16 @@ class QwenChatLLM(ChatLLM):
 
         Args:
             prompt: The prompt to generate from.
-            stop: Stop words to use when generating. Model output is cut off at 
+            stop: Stop words to use when generating. Model output is cut off at
                 the first occurrence of any of the stop substrings.
                 If stop tokens are not supported consider raisin NotImplementedError.
             run_manager: Callback manager for the run.
-            **kwargs: Arbitrary additional keyword arguments. 
+            **kwargs: Arbitrary additional keyword arguments.
             - *history_messages*: List, e.g. [{"role: "assistant", "content": "ANSWER"}]
 
         Returns:
             The model output as a string.
-        """
+        """  # noqa: D406, D407
         if stop is not None:
             msg = "stop kwargs are not permitted."
             raise ValueError(msg)
@@ -96,6 +99,7 @@ class QwenChatLLM(ChatLLM):
         args = {
             "data": {
                 "messages": messages,
+                "model": self.config.model_name,
                 "stream": stream,
                 **self.config.model_parameters,
             },
@@ -131,13 +135,14 @@ class QwenChatLLM(ChatLLM):
 
         Returns:
             An async iterator of GenerationChunks.
-        """
+        """  # noqa: D406, D407
         history = kwargs.get("history_messages", [])
         messages = [*history, {"role": "user", "content": prompt}]
         stream = True
         args = {
             "data": {
                 "messages": messages,
+                "model": self.config.model_name,
                 "stream": stream,
                 **self.config.model_parameters,
             },
@@ -146,7 +151,7 @@ class QwenChatLLM(ChatLLM):
         }
         # make sure stream==True
         if not stream:
-            print("WARNING: CANNOT stream data when `stream==False`, setting `stream:=True`now")
+            print("WARNING: CANNOT stream data when `stream==False`, setting `stream:=True`now")  # noqa: T201
             args["data"]["stream"] = True
 
         aclient = AsyncChatClient(response_cls=ChatCompletionChunk)
@@ -173,21 +178,22 @@ class QwenChatLLM(ChatLLM):
 
         Args:
             prompt: The prompt to generate from.
-            stop: Stop words to use when generating. Model output is cut off at 
+            stop: Stop words to use when generating. Model output is cut off at
                 the first occurrence of any of these substrings.
             run_manager: Callback manager for the run.
-            **kwargs: Arbitrary additional keyword arguments. 
+            **kwargs: Arbitrary additional keyword arguments.
                 - *history_messages*: List, e.g. [{"role: "assistant", "content": "ANSWER"}]
 
         Returns:
             An iterator of GenerationChunks.
-        """
+        """  # noqa: D406, D407
         history = kwargs.get("history_messages", [])
         messages = [*history, {"role": "user", "content": prompt}]
         stream = True
         args = {
             "data": {
                 "messages": messages,
+                "model": self.config.model_name,
                 "stream": stream,
                 **self.config.model_parameters,
             },

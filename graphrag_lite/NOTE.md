@@ -28,6 +28,7 @@ community : use report or not
 
 
 # custom llm and embedding parameters
+修改了openai依赖的代码
 openai: open.resources.embeddings:AsyncEmbeddings.create :220
 params里加入`"isNorm": False`
 
@@ -73,6 +74,49 @@ use langchain v0.3.24
 
 |   +-- c
 ```
+流程
+run_chunk_text
+
+run_extract_graph_nlp : using nlp to get NP, pruning graph, store graph
+
+新建知识库 pdf -> text 存到input --chunking-> text_unit 
+"create_base_text_units",
+"create_final_documents",
+"extract_graph_nlp",
+"prune_graph",
+"finalize_graph",
+"create_communities",
+"create_final_text_units",
+"create_community_reports_text",
+"generate_text_embeddings",
+
+with_structured_output
+定义run_* callable 的 格式 config, RunContext -> None
+RunContext [Cache, Storage, Callback(主要处理progress)]
+run_chunk_text -> get TextChunk & documents -> save to storage
+
+- load_storage
+- run ...
+- write_storage
+
+run_extract_graph_nlp -> extract, prune, finalize (store) graph
+
+RunOp
+callable[[config, RunContext], None]
+
+run_op文件里 有一个类定义了RunOp, 全过程Run, 包含了run_op的所有过程
+
+RunStorage
+查询逻辑
+default_tenantId = "VIRTUAL_TENANT_ID"
+default_userId = "VIRTUAL_USER_ID"
+按照用户来存，working_dir = "#(tenantId)##(userId)###"
+
+RunContext Cache(langchain) RunStorage RunStats RunCallback
+
+要考虑到往NebulaGraph里INSERT的数据结构
+
+
 
 index和query对数据库操作 互斥机制
 
@@ -83,11 +127,12 @@ entity，relationship，text_unit 按知识库分别存储
 删除逻辑：对应的知识库里的 entity，relationship，text_unit 直接删除
 
 
-多个知识库问答：将entity和relationship 的 df拼接起来
 
+多个知识库问答：将entity和relationship 的 df 拼接起来
 
 Lancedb
 
+Hybrid Search
 https://docs.lancedb.com/core/hybrid-search
 
 
@@ -102,3 +147,32 @@ https://apxml.com/courses/prompt-engineering-llm-application-development/chapter
 > 3. If it fails again, wait for base_delay * 2 + random_jitter.
 > 4. If it fails again, wait for base_delay * 4 + random_jitter.
 > 5. Continue doubling the wait time (up to a reasonable maximum delay) until the maximum number of retries is reached.
+
+
+Langchain-Chain
+https://python.langchain.com/docs/tutorials/sql_qa/#chains
+
+
+Langchain-Context
+https://api.python.langchain.com/en/latest/core/beta/langchain_core.beta.runnables.context.Context.html
+
+SQLStore InMemoryStore
+()
+
+Langchain chain with storage and cache
+
+Langchain-Store
+
+Run Operation with Langchain RunnableLambda
+https://python.langchain.com/docs/how_to/functions/
+
+Langchain Callbacks and Custom Events 
+https://python.langchain.com/docs/how_to/callbacks_custom_events/
+https://python.langchain.com/docs/how_to/streaming/#propagating-callbacks
+
+
+store-
+tenant -> User -> [knowledgeBase1, knowledgeBase2, ..., ]
+
+问答 
+https://langchain-ai.github.io/langgraph/how-tos/#persistence

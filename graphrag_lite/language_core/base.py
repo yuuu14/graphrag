@@ -1,11 +1,10 @@
-
+# Copyright (c) 2025 @ SUPCON.
 """Custom Client for LLM and Embedding Models."""
+
 import json
 from collections.abc import AsyncIterator, Iterator
 from dataclasses import dataclass
-from typing import (
-    TypeVar,
-)
+from typing import TypeVar
 
 import aiohttp
 import httpx
@@ -26,7 +25,7 @@ class AsyncBaseClient:
             try:
                 response = await r.json()
             except Exception as e:
-                msg = f"LLM异步请求失败：{type(e)}, {e}"
+                msg = f"LLM异步请求失败! 报错: {e}."
                 raise Exception(msg)
         return response
     
@@ -54,14 +53,16 @@ class AsyncBaseClient:
                                 try:
                                     part: dict = json.loads(part)
                                 except Exception as e:
-                                    print(f"加载JSON失败！CHUNK: {part}，报错：{type(e), e}")
+                                    print(f"加载JSON失败! CHUNK: {part}, 报错: {type(e), e}.")
                                     raise Exception(e)
-                                if err := part.get('error'):
-                                    raise Exception(f"返回字段包含error：{err}")
+                                if err := part.get("error"):
+                                    msg = f"返回字段包含error: {err}."
+                                    raise Exception(msg)
                                 try:
                                     yield cls(**part)
                                 except Exception as e:
-                                    raise Exception(f"LLM异步流式返回结果：{part}，报错：{type(e)}, {e}")
+                                    msg = f"LLM异步流式返回结果: {part}, 报错: {e}."
+                                    raise Exception(msg)
             return inner()
         
         response = await self._arequest_raw(**kwargs)
@@ -102,12 +103,12 @@ class BaseClient:
                             continue
                         part: dict = json.loads(data_)
                         if err := part.get("error"):
-                            print(f"返回字段包含error：{err}")
+                            print(f"返回字段包含error: {err}.")
                             raise Exception(err)
                         try:
                             yield cls(**part)
                         except Exception as e:
-                            msg = f"LLM流式返回结果：{part}，报错：{type(e)}, {e}"
+                            msg = f"LLM流式返回结果: {part}, 报错: {e}."
                             raise Exception(msg) from e
             return inner()
         
@@ -127,7 +128,7 @@ class AsyncChatClient(AsyncBaseClient):
         headers: dict | None = None,
         stream: bool = True,
     ) -> T | AsyncIterator[T]:
-        """Create a chat response. If `stream==True`, return a ChatResponse AsyncIterator."""
+        """Create a chat response in ASYNC mode. If `stream==True`, return a ChatResponse AsyncIterator."""
         if headers is None:
             headers = {"Content-Type": "application/json"}
         return await self._request(
@@ -172,16 +173,17 @@ class AsyncEmbedClient(AsyncBaseClient):
 
     response_cls: type[T]
 
-    def embed(
+    async def embed(
         self,
         data: dict,
         url: str,
         headers: dict | None = None,
         stream: bool = True,
     ) -> T | Iterator[T]:
+        """Embed given data in ASYNC mode."""
         if headers is None:
             headers = {"Content-Type": "application/json"}
-        return self._request(
+        return await self._request(
             self.response_cls,
             method="POST",
             url=url,
@@ -204,6 +206,7 @@ class EmbedClient(BaseClient):
         headers: dict | None = None,
         stream: bool = True,
     ) -> T | Iterator[T]:
+        """Embed given data."""
         if headers is None:
             headers = {"Content-Type": "application/json"}
         return self._request(

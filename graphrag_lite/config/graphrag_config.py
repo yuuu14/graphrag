@@ -1,4 +1,5 @@
-
+# Copyright (c) 2025 @ SUPCON.
+"""GraphRAG configuration."""
 
 from dataclasses import asdict
 from pathlib import Path
