@@ -58,7 +58,6 @@ class LoggingHandler(BaseCallbackHandler):
             parent_run_id (UUID): The parent run ID. This is the ID of the parent run.
             kwargs (Any): Additional keyword arguments.
         """
-        ...
 
 
 

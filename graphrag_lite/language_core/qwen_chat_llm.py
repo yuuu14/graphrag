@@ -37,7 +37,8 @@ class QwenChatLLM(ChatLLM):
         `run_in_executor`. Subclasses that need to provide a true async implementation
         should override this method to reduce the overhead of using `run_in_executor`.
 
-        Args:
+        Args
+        ----
             prompt: The prompt to generate from.
             stop: Stop words to use when generating. Model output is cut off at the
                 first occurrence of any of the stop substrings.
@@ -47,9 +48,10 @@ class QwenChatLLM(ChatLLM):
                 to the model provider API call.
                 - *history_messages*: List, e.g. [{"role: "assistant", "content": "ANSWER"}]
 
-        Returns:
+        Returns
+        -------
             The model output as a string. SHOULD NOT include the prompt.
-        """  # noqa: D406, D407
+        """
         history = kwargs.get("history_messages", [])
         messages = [*history, {"role": "user", "content": prompt}]
         stream = False
@@ -77,18 +79,20 @@ class QwenChatLLM(ChatLLM):
     ) -> str:
         """Run the LLM on the given input.
 
-        Args:
+        Args
+        ----
             prompt: The prompt to generate from.
             stop: Stop words to use when generating. Model output is cut off at
                 the first occurrence of any of the stop substrings.
-                If stop tokens are not supported consider raisin NotImplementedError.
+                If stop tokens are not supported consider raising NotImplementedError.
             run_manager: Callback manager for the run.
             **kwargs: Arbitrary additional keyword arguments.
             - *history_messages*: List, e.g. [{"role: "assistant", "content": "ANSWER"}]
 
-        Returns:
+        Returns
+        -------
             The model output as a string.
-        """  # noqa: D406, D407
+        """
         if stop is not None:
             msg = "stop kwargs are not permitted."
             raise ValueError(msg)
@@ -124,7 +128,8 @@ class QwenChatLLM(ChatLLM):
         an async iterator. Subclasses that need to provide a true async implementation
         should override this method.
 
-        Args:
+        Args
+        ----
             prompt: The prompt to generate from.
             stop: Stop words to use when generating. Model output is cut off at the
                 first occurrence of any of these substrings.
@@ -133,9 +138,10 @@ class QwenChatLLM(ChatLLM):
                 to the model provider API call.
                 - *history_messages*: List, e.g. [{"role: "assistant", "content": "ANSWER"}]
 
-        Returns:
+        Returns
+        -------
             An async iterator of GenerationChunks.
-        """  # noqa: D406, D407
+        """
         history = kwargs.get("history_messages", [])
         messages = [*history, {"role": "user", "content": prompt}]
         stream = True
