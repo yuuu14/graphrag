@@ -19,7 +19,7 @@ from graphrag_lite.language_core.types import (
 )
 
 
-class QwenChatLLM(ChatLLM):
+class OpenaiChatLLM(ChatLLM):
     """本地部署的Qwen2.5-72B."""
     
     config: LLMConfig
@@ -228,7 +228,7 @@ class QwenChatLLM(ChatLLM):
             # rules in LLM monitoring applications (e.g., in LangSmith users
             # can provide per token pricing for their model and monitor
             # costs for the given LLM.)
-            "model_name": "QwenChatLLM"
+            "model_name": "OpenaiChatLLM"
         }
     
     @property
@@ -241,4 +241,4 @@ class QwenChatLLM(ChatLLM):
     @property
     def _llm_type(self) -> str:
         """Get the type of language model used by this chat model. Used for logging purposes only."""
-        return "Qwen2.5-72B"
+        return "openai-chat"

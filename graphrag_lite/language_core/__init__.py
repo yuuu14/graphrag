@@ -3,6 +3,7 @@
 
 from graphrag_lite._typing.enums import ChatLLMType, EmbeddingModelType
 from graphrag_lite.language_core.mock_chat_llm import MockChatLLM
+from graphrag_lite.language_core.openai_chat_llm import OpenaiChatLLM
 from graphrag_lite.language_core.qwen_chat_llm import QwenChatLLM
 from graphrag_lite.language_core.supcon_embedding_model import SupconEmbeddingModel
 from graphrag_lite.language_core.types import ChatLLM, EmbeddingModel
@@ -17,6 +18,7 @@ embedding_models: dict[EmbeddingModelType, type[EmbeddingModel]] = {
 
 __all__ = [
     "MockChatLLM",
+    "OpenaiChatLLM",
     "QwenChatLLM",
     "SupconEmbeddingModel",
     "chat_llms",
