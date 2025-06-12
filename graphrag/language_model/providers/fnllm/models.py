@@ -1,5 +1,4 @@
-# Copyright (c) 2025 Microsoft Corporation.
-# Licensed under the MIT License
+
 
 """A module containing fnllm model provider definitions."""
 

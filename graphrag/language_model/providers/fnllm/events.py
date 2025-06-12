@@ -1,12 +1,10 @@
-# Copyright (c) 2025 Microsoft Corporation.
-# Licensed under the MIT License
+
 
 """FNLLM llm events provider."""
 
 from typing import Any
 
 from fnllm.events import LLMEvents
-
 from graphrag.index.typing.error_handler import ErrorHandlerFn
 
 

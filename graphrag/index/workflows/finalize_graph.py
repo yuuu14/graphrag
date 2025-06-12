@@ -66,4 +66,7 @@ def finalize_graph(
         entities, relationships, callbacks, embed_config, layout_enabled
     )
     final_relationships = finalize_relationships(relationships)
+    #! 改成智问格式
+    # 用graphml保存，然后导入NebulaGraph
+    
     return (final_entities, final_relationships)
